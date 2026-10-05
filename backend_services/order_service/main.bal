@@ -1,7 +1,6 @@
 import ballerina/http;
 import ballerinax/kafka;
 
-// 1. Define the exact state machine required by the assignment
 enum OrderStatus {
     CREATED, CONFIRMED, PREPARING, READY, OUT_FOR_DELIVERY, DELIVERED, CANCELLED
 }
@@ -17,20 +16,30 @@ type Order record {|
 
 table<Order> key(id) ordersTable = table [];
 
-// 2. Configure the Kafka Producer to connect to your Docker instance on port 9092
 kafka:Producer orderProducer = check new (kafka:DEFAULT_URL);
 
 service /orders on new http:Listener(8083) {
 
-    // 3. Create an order and emit the Kafka event
+    // Create an order with dynamic Surge Pricing
     resource function post .(Order newOrder) returns Order|error {
         
-        // Enforce the initial state of the machine
+        // --- SURGE PRICING LOGIC (BONUS FEATURE) ---
+        // If an order contains more than 2 items, simulate high demand and apply a 25% surge multiplier
+        float surgeMultiplier = 1.0;
+        string surgeNote = "Standard Pricing";
+        
+        if newOrder.items.length() > 2 {
+            surgeMultiplier = 1.25; 
+            newOrder.totalAmount = newOrder.totalAmount * surgeMultiplier;
+            surgeNote = "Surge Pricing Applied (25% High Demand Multiplier)";
+        }
+        // -------------------------------------------
+
         newOrder.status = CREATED;
         ordersTable.add(newOrder);
 
-        // Emit event to the "orders.created" Kafka topic 
-        string message = "Order " + newOrder.id + " created for customer " + newOrder.customerId;
+        // Emit event to the "orders.created" Kafka topic including the surge info
+        string message = string `Order ${newOrder.id} created. Total: ${newOrder.totalAmount} (${surgeNote})`;
         check orderProducer->send({
             topic: "orders.created",
             value: message.toBytes()
@@ -39,7 +48,7 @@ service /orders on new http:Listener(8083) {
         return newOrder;
     }
 
-    // 4. Progress the Order State Machine
+    // Progress the Order State Machine
     resource function put [string id]/status(OrderStatus newStatus) returns Order|http:NotFound|error {
         Order? existingOrder = ordersTable[id];
         if existingOrder is () {
@@ -48,7 +57,6 @@ service /orders on new http:Listener(8083) {
         
         existingOrder.status = newStatus;
         
-        // Emit a status update event
         string message = "Order " + id + " transitioned to " + newStatus;
         check orderProducer->send({
             topic: "orders.updated",

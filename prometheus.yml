@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'food-delivery-cluster'
+    static_configs:
+      - targets: ['order_service:8083', 'customer_service:8081', 'restaurant_service:8082']
