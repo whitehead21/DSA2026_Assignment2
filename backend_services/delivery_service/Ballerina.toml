@@ -1,0 +1,8 @@
+[package]
+org = "oskar"
+name = "delivery_service"
+version = "0.1.0"
+distribution = "2201.12.8"
+
+[build-options]
+observabilityIncluded = true
