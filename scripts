@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+
+BOOTSTRAP="kafka:29092"
+
+TOPICS=(
+  "orders.created"
+  "orders.confirmed"
+  "orders.cancelled"
+  "payments.completed"
+  "payments.failed"
+  "restaurant.order.accepted"
+  "restaurant.order.ready"
+  "delivery.requested"
+  "delivery.assigned"
+  "delivery.status.updated"
+  "delivery.completed"
+)
+
+for TOPIC in "${TOPICS[@]}"; do
+  echo "Creating topic: $TOPIC"
+  kafka-topics --bootstrap-server $BOOTSTRAP \
+    --create --if-not-exists \
+    --topic "$TOPIC" \
+    --partitions 3 \
+    --replication-factor 1
+done
+
+echo "All topics created."
+kafka-topics --bootstrap-server $BOOTSTRAP --list
