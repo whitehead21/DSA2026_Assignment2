@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Food Delivery Platform</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="band">
+    <div class="wrap band-top">
+      <h1 class="brand">Food Delivery Platform</h1>
+      <ul class="health" id="health" aria-label="Service status"></ul>
+    </div>
+    <div class="wrap">
+      <div class="rail" id="rail"></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="tabs" role="tablist" aria-label="Use the platform as">
+      <button type="button" role="tab" id="tab-customer" data-tab="customer" aria-controls="panel-customer">Customer</button>
+      <button type="button" role="tab" id="tab-restaurant" data-tab="restaurant" aria-controls="panel-restaurant">Restaurant</button>
+      <button type="button" role="tab" id="tab-driver" data-tab="driver" aria-controls="panel-driver">Driver</button>
+      <button type="button" role="tab" id="tab-admin" data-tab="admin" aria-controls="panel-admin">Admin</button>
+    </div>
+
+    <section role="tabpanel" id="panel-customer" data-panel="customer" aria-labelledby="tab-customer">
+      <div class="split">
+        <div class="block" id="account"><p class="muted">Loading your account…</p></div>
+        <div class="block">
+          <h2>Order food</h2>
+          <form class="inline" id="restaurant-picker">
+            <label>Restaurant ID <input name="restaurantId" required autocomplete="off"></label>
+            <button type="submit" class="secondary">Show menu</button>
+          </form>
+          <div id="menu"></div>
+        </div>
+      </div>
+      <div class="block">
+        <h2>Your orders</h2>
+        <div id="my-orders"></div>
+      </div>
+    </section>
+
+    <section role="tabpanel" id="panel-restaurant" data-panel="restaurant" aria-labelledby="tab-restaurant" hidden>
+      <div class="split">
+        <div class="block" id="restaurant-details"></div>
+        <div class="block">
+          <h2>Menu and stock</h2>
+          <div id="menu-table"></div>
+          <form class="stack" id="dish-form">
+            <h3>Add or update a dish</h3>
+            <label>Dish <input name="itemName" required autocomplete="off" placeholder="Kapana"></label>
+            <div class="pair">
+              <label>Price (N$) <input name="price" type="number" min="0" step="0.01" required></label>
+              <label>Stock <input name="stock" type="number" min="0" step="1" required></label>
+            </div>
+            <button type="submit">Save dish</button>
+          </form>
+        </div>
+      </div>
+      <div class="block">
+        <h2>Kitchen queue</h2>
+        <div id="kitchen"></div>
+      </div>
+    </section>
+
+    <section role="tabpanel" id="panel-driver" data-panel="driver" aria-labelledby="tab-driver" hidden>
+      <div class="split">
+        <div class="block">
+          <h2>Driver pool</h2>
+          <p>When the kitchen marks an order ready, the Delivery Service gives it to a free driver. The pool is empty after a restart, so add the drivers first.</p>
+          <button type="button" id="seed-drivers">Add drivers to the pool</button>
+        </div>
+        <div class="block">
+          <h2>On the road</h2>
+          <div id="deliveries"></div>
+        </div>
+      </div>
+      <div class="block">
+        <h2>Ready, no driver yet</h2>
+        <div id="waiting"></div>
+      </div>
+    </section>
+
+    <section role="tabpanel" id="panel-admin" data-panel="admin" aria-labelledby="tab-admin" hidden>
+      <dl class="stats" id="stats"></dl>
+      <p class="muted small stats-note">Revenue counts delivered orders only.</p>
+      <div class="block">
+        <h2>Restaurants</h2>
+        <div id="restaurant-report"></div>
+      </div>
+      <div class="block narrow">
+        <h2>Delivery performance</h2>
+        <div id="delivery-report"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
