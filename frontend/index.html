@@ -3,80 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NUST Food Delivery Platform - Full Suite</title>
+    <title>NUST Food Delivery Platform | Command Center</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h2 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 5px; }
-        .section { margin-bottom: 25px; padding: 15px; background: #fafafa; border: 1px solid #ddd; border-radius: 5px; }
-        input, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
-        button { background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #0056b3; }
-        pre { background: #272822; color: #f8f8f2; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-12">
 
-<div class="container">
-    <h1>🍔 NUST Food Delivery Platform</h1>
-    <p><i>Full Microservices Architecture + All Bonus Features</i></p>
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl font-bold text-xl shadow-lg shadow-indigo-500/30">🍔</div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight text-white">NUST Food Delivery Platform</h1>
+                    <p class="text-xs text-slate-400">Distributed Systems & Applications (DSA612S) Control Center</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-xs font-medium text-emerald-400">System Cluster Online</span>
+            </div>
+        </div>
+    </header>
 
-    <!-- Route Optimization -->
-    <div class="section">
-        <h2>🚚 3. Route Optimization (Bonus)</h2>
-        <input type="number" id="startLat" placeholder="Restaurant Latitude (e.g. -22.56)" value="-22.5609">
-        <input type="number" id="startLon" placeholder="Restaurant Longitude (e.g. 17.06)" value="17.0658">
-        <input type="number" id="endLat" placeholder="Customer Latitude (e.g. -22.58)" value="-22.5812">
-        <input type="number" id="endLon" placeholder="Customer Longitude (e.g. 17.09)" value="17.0931">
-        <button onclick="optimizeRoute()">Calculate Optimal Route & ETA</button>
-    </div>
+    <!-- Main Grid Layout -->
+    <main class="max-w-7xl mx-auto px-6 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left 2 Columns: Interactive Actions -->
+        <div class="lg:col-span-2 space-y-6">
 
-    <!-- Driver Location Simulation -->
-    <div class="section">
-        <h2>📍 4. Live Driver GPS Tracking (Bonus)</h2>
-        <input type="text" id="driverId" placeholder="Driver ID (e.g. driver_01)" value="driver_01">
-        <button onclick="trackDriver()">Fetch Live Driver Coordinates</button>
-    </div>
+            <!-- Card 1: Customer Registration -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl"></div>
+                <h2 class="text-base font-semibold text-white flex items-center mb-4">
+                    <span class="bg-indigo-500/10 text-indigo-400 p-2 rounded-lg mr-3 text-sm">👤</span> 1. Register Customer
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="custId" placeholder="Customer ID (e.g. c1)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                    <input type="text" id="custName" placeholder="Full Name" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                    <input type="email" id="custEmail" placeholder="Email Address" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                    <input type="text" id="custAddress" placeholder="Delivery Address" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                </div>
+                <button onclick="registerCustomer()" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-indigo-600/20 text-sm">Save Customer Profile</button>
+            </div>
 
-    <!-- Live Response / Output -->
-    <div class="section">
-        <h2>📡 Live System Response</h2>
-        <pre id="output">System ready...</pre>
-    </div>
-</div>
+            <!-- Card 2: Place Order (Surge Pricing & Kafka) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl"></div>
+                <h2 class="text-base font-semibold text-white flex items-center mb-4">
+                    <span class="bg-amber-500/10 text-amber-400 p-2 rounded-lg mr-3 text-sm">⚡</span> 2. Place Order (Triggers Kafka & Surge Pricing)
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="orderId" placeholder="Order ID (e.g. ord101)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                    <input type="text" id="orderCustId" placeholder="Customer ID" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                    <input type="text" id="orderRestId" placeholder="Restaurant ID" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                    <input type="number" id="orderAmount" placeholder="Base Amount ($)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                </div>
+                <input type="text" id="orderItems" placeholder="Items (comma separated, e.g. Burger,Fries,Coke -> Triggers Surge!)" class="mt-4 w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                <button onclick="placeOrder()" class="mt-4 w-full bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-amber-600/20 text-sm">Submit Order & Broadcast Event</button>
+            </div>
 
-<script>
-    async function optimizeRoute() {
-        const data = {
-            startLat: parseFloat(document.getElementById('startLat').value),
-            startLon: parseFloat(document.getElementById('startLon').value),
-            endLat: parseFloat(document.getElementById('endLat').value),
-            endLon: parseFloat(document.getElementById('endLon').value)
-        };
-        try {
-            const res = await fetch(`http://localhost:8085/deliveries/optimize`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            const result = await res.json();
-            document.getElementById('output').innerText = JSON.stringify(result, null, 2);
-        } catch (err) {
-            document.getElementById('output').innerText = "Error: " + err.message;
+            <!-- Card 3: Route Optimization & Driver Tracking -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Route Optimization -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                    <h2 class="text-base font-semibold text-white flex items-center mb-4">
+                        <span class="bg-emerald-500/10 text-emerald-400 p-2 rounded-lg mr-3 text-sm">🗺️</span> Route Optimization
+                    </h2>
+                    <div class="space-y-3">
+                        <input type="number" id="startLat" value="-22.5609" placeholder="Start Lat" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+                        <input type="number" id="endLat" value="-22.5812" placeholder="End Lat" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+                        <button onclick="optimizeRoute()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2 rounded-xl transition text-xs">Calculate ETA</button>
+                    </div>
+                </div>
+
+                <!-- Driver GPS Simulation -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                    <h2 class="text-base font-semibold text-white flex items-center mb-4">
+                        <span class="bg-cyan-500/10 text-cyan-400 p-2 rounded-lg mr-3 text-sm">📍</span> Live Driver GPS
+                    </h2>
+                    <div class="space-y-3">
+                        <input type="text" id="driverId" value="driver_01" placeholder="Driver ID" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+                        <div class="h-9"></div> <!-- Spacer to match height -->
+                        <button onclick="trackDriver()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-medium py-2 rounded-xl transition text-xs">Fetch Coordinates</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Live System Response Console -->
+        <div class="lg:col-span-1">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl sticky top-24 flex flex-col h-[calc(100vh-140px)]">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-sm font-semibold text-white flex items-center">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500 mr-2"></span> Response Console
+                    </h2>
+                    <button onclick="clearConsole()" class="text-xs text-slate-400 hover:text-white transition">Clear</button>
+                </div>
+                <div class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-4 overflow-auto font-mono text-xs text-emerald-400" id="output">
+                    // Ready for API requests...
+                </div>
+                <div class="mt-4 text-xs text-slate-500 text-center">
+                    Connected to Local Docker Cluster
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function logResponse(data) {
+            const output = document.getElementById('output');
+            output.innerText = JSON.stringify(data, null, 2);
+            output.scrollTop = output.scrollHeight;
         }
-    }
 
-    async function trackDriver() {
-        const driverId = document.getElementById('driverId').value;
-        try {
-            const res = await fetch(`http://localhost:8085/deliveries/${driverId}/location`);
-            const result = await res.json();
-            document.getElementById('output').innerText = JSON.stringify(result, null, 2);
-        } catch (err) {
-            document.getElementById('output').innerText = "Error: " + err.message;
+        function clearConsole() {
+            document.getElementById('output').innerText = "// Console cleared.";
         }
-    }
-</script>
 
+        async function registerCustomer() {
+            const data = {
+                id: document.getElementById('custId').value,
+                name: document.getElementById('custName').value,
+                email: document.getElementById('custEmail').value,
+                deliveryAddress: document.getElementById('custAddress').value
+            };
+            try {
+                const res = await fetch('http://localhost:8081/customers', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                logResponse(await res.json());
+            } catch (err) {
+                logResponse({ error: err.message });
+            }
+        }
+
+        async function placeOrder() {
+            const rawItems = document.getElementById('orderItems').value.split(',').map(i => i.trim());
+            const data = {
+                id: document.getElementById('orderId').value,
+                customerId: document.getElementById('orderCustId').value,
+                restaurantId: document.getElementById('orderRestId').value,
+                items: rawItems,
+                totalAmount: parseFloat(document.getElementById('orderAmount').value),
+                status: "CREATED"
+            };
+            try {
+                const res = await fetch('http://localhost:8083/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                logResponse(await res.json());
+            } catch (err) {
+                logResponse({ error: err.message });
+            }
+        }
+
+        async function optimizeRoute() {
+            const data = {
+                startLat: parseFloat(document.getElementById('startLat').value),
+                startLon: 17.0658,
+                endLat: parseFloat(document.getElementById('endLat').value),
+                endLon: 17.0931
+            };
+            try {
+                const res = await fetch('http://localhost:8085/deliveries/optimize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                logResponse(await res.json());
+            } catch (err) {
+                logResponse({ error: err.message });
+            }
+        }
+
+        async function trackDriver() {
+            const driverId = document.getElementById('driverId').value;
+            try {
+                const res = await fetch(`http://localhost:8085/deliveries/${driverId}/location`);
+                logResponse(await res.json());
+            } catch (err) {
+                logResponse({ error: err.message });
+            }
+        }
+    </script>
 </body>
 </html>
