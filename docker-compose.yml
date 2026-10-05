@@ -74,6 +74,14 @@ services:
     ports:
       - "8086:8086"
 
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - customer_service
+      - order_service
+
   prometheus:
     image: prom/prometheus:latest
     ports:
@@ -90,10 +98,3 @@ services:
 
 volumes:
   mongo-data:
-frontend:
-    build: ./frontend
-    ports:
-      - "8080:80"
-    depends_on:
-      - customer_service
-      - order_service

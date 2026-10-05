@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NUST Food Delivery Platform</title>
+    <title>NUST Food Delivery Platform - Full Suite</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -19,27 +19,23 @@
 
 <div class="container">
     <h1>🍔 NUST Food Delivery Platform</h1>
-    <p><i>Distributed Systems & Applications (DSA612S) - Live Control Panel</i></p>
+    <p><i>Full Microservices Architecture + All Bonus Features</i></p>
 
-    <!-- Customer Registration -->
+    <!-- Route Optimization -->
     <div class="section">
-        <h2>1. Register Customer</h2>
-        <input type="text" id="custId" placeholder="Customer ID (e.g. c1)">
-        <input type="text" id="custName" placeholder="Full Name">
-        <input type="email" id="custEmail" placeholder="Email Address">
-        <input type="text" id="custAddress" placeholder="Delivery Address">
-        <button onclick="registerCustomer()">Save Customer</button>
+        <h2>🚚 3. Route Optimization (Bonus)</h2>
+        <input type="number" id="startLat" placeholder="Restaurant Latitude (e.g. -22.56)" value="-22.5609">
+        <input type="number" id="startLon" placeholder="Restaurant Longitude (e.g. 17.06)" value="17.0658">
+        <input type="number" id="endLat" placeholder="Customer Latitude (e.g. -22.58)" value="-22.5812">
+        <input type="number" id="endLon" placeholder="Customer Longitude (e.g. 17.09)" value="17.0931">
+        <button onclick="optimizeRoute()">Calculate Optimal Route & ETA</button>
     </div>
 
-    <!-- Place Order -->
+    <!-- Driver Location Simulation -->
     <div class="section">
-        <h2>2. Place Order (Triggers Kafka & Surge Pricing)</h2>
-        <input type="text" id="orderId" placeholder="Order ID (e.g. ord101)">
-        <input type="text" id="orderCustId" placeholder="Customer ID">
-        <input type="text" id="orderRestId" placeholder="Restaurant ID">
-        <input type="text" id="orderItems" placeholder="Items (comma separated, e.g. Burger,Fries,Coke -> Triggers Surge!)">
-        <input type="number" id="orderAmount" placeholder="Base Amount ($)">
-        <button onclick="placeOrder()">Submit Order</button>
+        <h2>📍 4. Live Driver GPS Tracking (Bonus)</h2>
+        <input type="text" id="driverId" placeholder="Driver ID (e.g. driver_01)" value="driver_01">
+        <button onclick="trackDriver()">Fetch Live Driver Coordinates</button>
     </div>
 
     <!-- Live Response / Output -->
@@ -50,21 +46,15 @@
 </div>
 
 <script>
-    const portMapping = {
-        customer: 8081,
-        restaurant: 8082,
-        order: 8083
-    };
-
-    async function registerCustomer() {
+    async function optimizeRoute() {
         const data = {
-            id: document.getElementById('custId').value,
-            name: document.getElementById('custName').value,
-            email: document.getElementById('custEmail').value,
-            deliveryAddress: document.getElementById('custAddress').value
+            startLat: parseFloat(document.getElementById('startLat').value),
+            startLon: parseFloat(document.getElementById('startLon').value),
+            endLat: parseFloat(document.getElementById('endLat').value),
+            endLon: parseFloat(document.getElementById('endLon').value)
         };
         try {
-            const res = await fetch(`http://localhost:8081/customers`, {
+            const res = await fetch(`http://localhost:8085/deliveries/optimize`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -76,22 +66,10 @@
         }
     }
 
-    async function placeOrder() {
-        const rawItems = document.getElementById('orderItems').value.split(',');
-        const data = {
-            id: document.getElementById('orderId').value,
-            customerId: document.getElementById('orderCustId').value,
-            restaurantId: document.getElementById('orderRestId').value,
-            items: rawItems,
-            totalAmount: parseFloat(document.getElementById('orderAmount').value),
-            status: "CREATED"
-        };
+    async function trackDriver() {
+        const driverId = document.getElementById('driverId').value;
         try {
-            const res = await fetch(`http://localhost:8083/orders`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+            const res = await fetch(`http://localhost:8085/deliveries/${driverId}/location`);
             const result = await res.json();
             document.getElementById('output').innerText = JSON.stringify(result, null, 2);
         } catch (err) {
