@@ -305,29 +305,14 @@ modules = [
 ]
 
 [[package]]
-org = "ballerinax"
-name = "mongodb"
-version = "5.2.4"
-dependencies = [
-	{org = "ballerina", name = "crypto"},
-	{org = "ballerina", name = "jballerina.java"},
-	{org = "ballerina", name = "log"},
-	{org = "ballerina", name = "time"}
-]
-modules = [
-	{org = "ballerinax", packageName = "mongodb", moduleName = "mongodb"}
-]
-
-[[package]]
 org = "oskar"
-name = "customer_service"
+name = "restaurant_service"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
-	{org = "ballerinai", name = "observe"},
-	{org = "ballerinax", name = "mongodb"}
+	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "oskar", packageName = "customer_service", moduleName = "customer_service"}
+	{org = "oskar", packageName = "restaurant_service", moduleName = "restaurant_service"}
 ]
 

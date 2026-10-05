@@ -1,34 +1,40 @@
 import ballerina/http;
+import ballerinax/mongodb;
 
 type Customer record {|
-    readonly string id;
+    string id;
     string name;
     string email;
     string deliveryAddress;
 |};
 
-// Temporary in-memory storage until MongoDB is connected
-table<Customer> key(id) customersTable = table [];
+// Connect to the MongoDB container
+mongodb:Client mongoClient = check new ({
+    connection: "mongodb://mongodb:27017"
+});
 
 service /customers on new http:Listener(8081) {
     
-    // Retrieve all customers
-    resource function get .() returns Customer[] {
-        return customersTable.toArray();
-    }
-
-    // Register a new customer
+    // Register a new customer into MongoDB
     resource function post .(Customer customer) returns Customer|error {
-        customersTable.add(customer);
+        mongodb:Database db = check mongoClient->getDatabase("FoodDeliveryDB");
+        mongodb:Collection coll = check db->getCollection("Customers");
+        
+        check coll->insertOne(customer);
         return customer;
     }
 
-    // Get a specific customer by ID
-    resource function get [string id]() returns Customer|http:NotFound {
-        Customer? customer = customersTable[id];
-        if customer is () {
-            return http:NOT_FOUND;
+    // Retrieve a customer by ID from MongoDB
+    resource function get [string id]() returns Customer|http:NotFound|error {
+        mongodb:Database db = check mongoClient->getDatabase("FoodDeliveryDB");
+        mongodb:Collection coll = check db->getCollection("Customers");
+        
+        // Find the document and infer the type as Customer
+        Customer|error? result = coll->findOne({"id": id});
+        
+        if result is Customer {
+            return result;
         }
-        return customer;
+        return http:NOT_FOUND;
     }
 }
